@@ -99,3 +99,10 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# pycharm
+.idea/
+
+# RMS+, CLASSIFIED
+/python-package/eva/pms/rmsplus.py
+/tests/python/test_pms_rmsplus.py

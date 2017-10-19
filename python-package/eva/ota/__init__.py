@@ -1,0 +1,2 @@
+class OTA(object):
+    pass
