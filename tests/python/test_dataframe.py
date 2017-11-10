@@ -109,3 +109,5 @@ def test_copy():
 
     assert isinstance(df.copy(), DataFrame)
     assert (df.copy().values == df.values).all().all()
+    assert df.copy().dimensions == df.dimensions
+    assert df.copy().metrics == df.metrics

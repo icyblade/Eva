@@ -24,6 +24,9 @@ class DataFrame(pd.DataFrame):
         assert set(self.dimensions + self.metrics + ['timestamp', 'delta']) == set(self.columns.tolist()), (
             'Dimensions/values is not well-defined.'
         )
+        assert not set(self.dimensions).intersection(set(self.metrics)), (
+            'Duplicate feature found in dimensions and values.'
+        )
 
         # index should be native
         assert (self.index == pd.RangeIndex(len(self))).all()
