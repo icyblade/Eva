@@ -16,6 +16,7 @@ For example: `hdfs://data/shopping_log/type=food/date=20170101` is a valid path.
  - `root` is fixed among every `eva` instances.
  - `table_name` should not have multiple levels, thus `hdfs://data/shopping_log/food/date=20170101` is invalid.
  - `li_key` is necessary, thus `hdfs://data/shopping_log/type=food/20170101` is invalid.
+ - `=` character is not allowed in `li_key` and `li_value`.
 
 
 HDFS data should contains schemas. For example, such data is valid:
