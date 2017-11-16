@@ -2,18 +2,29 @@ import pandas as pd
 from eva.hardware import cpu, io
 
 
-class DataFrame(pd.DataFrame):
-    # _pivot_attributes = {}  # member of class rather than instance, thus it will be shared among all instances
-
+class DataFrame(object):
     @io
     def __init__(self, data=None, index=None, columns=None, dtype=None, copy=False,
                  dimensions=None, metrics=None):
-        super(DataFrame, self).__init__(data=data, index=index, columns=columns, dtype=dtype, copy=copy)
-
-        self._pivot_attributes = {'dimensions': [], 'metrics': []}
+        self._native_dataframe = pd.DataFrame(data=data, index=index, columns=columns, dtype=dtype, copy=copy)
         self.dimensions = dimensions
         self.metrics = metrics
         self._verify_integrality()
+
+    def __len__(self):
+        return len(self._native_dataframe)
+
+    @property
+    def index(self):
+        return self._native_dataframe.index
+
+    @property
+    def columns(self):
+        return self._native_dataframe.columns
+
+    @property
+    def values(self):
+        return self._native_dataframe.values
 
     def _verify_integrality(self):
         """Verify integrality of the DataFrame."""
@@ -29,11 +40,11 @@ class DataFrame(pd.DataFrame):
         )
 
         # index should be native
-        assert (self.index == pd.RangeIndex(len(self))).all()
+        assert isinstance(self.index, pd.core.index.NumericIndex)
 
     @property
     def dimensions(self):
-        return self._pivot_attributes['dimensions']
+        return self._dimensions
 
     @dimensions.setter
     def dimensions(self, dimensions):
@@ -41,11 +52,11 @@ class DataFrame(pd.DataFrame):
             dimensions = []
         elif not isinstance(dimensions, list):
             dimensions = [dimensions]
-        self._pivot_attributes['dimensions'] = dimensions
+        self._dimensions = dimensions
 
     @property
     def metrics(self):
-        return self._pivot_attributes['metrics']
+        return self._metrics
 
     @metrics.setter
     def metrics(self, metrics):
@@ -53,7 +64,7 @@ class DataFrame(pd.DataFrame):
             metrics = []
         elif not isinstance(metrics, list):
             metrics = [metrics]
-        self._pivot_attributes['metrics'] = metrics
+        self._metrics = metrics
 
     @property
     def table_view(self):
@@ -63,7 +74,7 @@ class DataFrame(pd.DataFrame):
     @cpu
     def matrix_view(self, fill_value=None):
         # TODO: matrix_view should be an instance of eva.dataframe.DataFrame rather than pandas.DataFrame
-        return self.pivot_table(
+        return self._native_dataframe.pivot_table(
             index='timestamp',
             columns=self.dimensions + ['delta'],
             values=self.metrics,
@@ -71,8 +82,10 @@ class DataFrame(pd.DataFrame):
         )
 
     def copy(self, deep=True):
-        df = super(DataFrame, self).copy(deep)
-        return DataFrame(df, dimensions=self.dimensions, metrics=self.metrics)
+        return DataFrame(
+            self._native_dataframe.copy(),
+            dimensions=self.dimensions, metrics=self.metrics
+        )
 
     def _pk2bk(self):
         raise NotImplementedError
