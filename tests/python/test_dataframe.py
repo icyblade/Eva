@@ -45,10 +45,10 @@ def test_dimension():
         dimensions=['id', 'type', 'code'],
         metrics=['value_1', 'value_2'],
     )
-    
+
     df.dimensions = 'id'
     assert df.dimensions == ['id']
-    
+
     df.dimensions = ['id', 'type']
     assert df.dimensions == ['id', 'type']
 
@@ -79,7 +79,7 @@ def test_table_view():
     )
     table_view = df.table_view
 
-    assert set(table_view.columns) ==  {'id', 'type', 'code', 'timestamp', 'delta', 'value_1', 'value_2'}
+    assert set(table_view.columns) == {'id', 'type', 'code', 'timestamp', 'delta', 'value_1', 'value_2'}
     assert (table_view.index == pd.RangeIndex(len(table_view))).all()
 
 
