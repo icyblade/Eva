@@ -12,4 +12,6 @@ def test_frontend():
 
 def test_wechat():
     with pytest.raises(NotImplementedError):
-        pass
+        from eva.frontend.wechat import Wechat
+
+        Wechat()
