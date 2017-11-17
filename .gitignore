@@ -104,5 +104,5 @@ ENV/
 .idea/
 
 # RMS+, CLASSIFIED
-/python-package/eva/pms/rmsplus.py
+/eva/pms/rmsplus.py
 /tests/python/test_pms_rmsplus.py

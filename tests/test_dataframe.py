@@ -111,3 +111,19 @@ def test_copy():
     assert (df.copy().values == df.values).all().all()
     assert df.copy().dimensions == df.dimensions
     assert df.copy().metrics == df.metrics
+
+
+def test_native_dataframe():
+    import pandas as pd
+    from eva.dataframe import DataFrame
+
+    df = DataFrame(
+        DATA,
+        dimensions=['id', 'type', 'code'],
+        metrics=['value_1', 'value_2'],
+    )
+    native_dataframe = pd.DataFrame(DATA)
+
+    assert (df.index == native_dataframe.index).all()
+    assert (df.columns == native_dataframe.columns).all()
+    assert df.shape == native_dataframe.shape
