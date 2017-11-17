@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-sys.path.append(os.path.abspath(os.path.dirname(__file__)+'/../../python-package/'))
+sys.path.append(os.path.abspath(os.path.dirname(__file__)+'/../'))
 
 
 def test_frontend():

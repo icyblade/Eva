@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-sys.path.append(os.path.abspath(os.path.dirname(__file__)+'/../../python-package/'))
+sys.path.append(os.path.abspath(os.path.dirname(__file__)+'/../'))
 
 DATA = [
     {
