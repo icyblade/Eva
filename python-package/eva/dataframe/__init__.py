@@ -26,6 +26,10 @@ class DataFrame(object):
     def values(self):
         return self._native_dataframe.values
 
+    @property
+    def shape(self):
+        return self._native_dataframe.shape
+
     def _verify_integrality(self):
         """Verify integrality of the DataFrame."""
 
