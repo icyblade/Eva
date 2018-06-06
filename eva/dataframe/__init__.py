@@ -11,6 +11,8 @@ class DataFrame(object):
         self.dimensions = dimensions
         self.metrics = metrics
         self._verify_integrality()
+        self._dimensions = None
+        self._metrics = None
 
     def __len__(self):
         return len(self._native_dataframe)
@@ -88,7 +90,7 @@ class DataFrame(object):
 
     def copy(self, deep=True):
         return DataFrame(
-            self._native_dataframe.copy(),
+            self._native_dataframe.copy(deep=deep),
             dimensions=self.dimensions, metrics=self.metrics
         )
 

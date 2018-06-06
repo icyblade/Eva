@@ -1,6 +1,7 @@
 class Hotel(object):
     def __init__(self, config):
         self._config = config
+        self._pms = None
 
     @property
     def pms(self):

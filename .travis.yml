@@ -1,14 +1,12 @@
-matrix:
-  include:
-    - language: python
-      python: "3.6"
-      install:
-        - pip install -r ./requirements.txt
-        - pip install flake8
-        - pip install codecov
-        - pip install pytest-cov
-      script:
-        - flake8 --show-source ./
-        - py.test --cov=./ ./tests/
-      after_success:
-        - codecov
+language: python
+python:
+ - "3.6"
+install:
+ - pip install codecov
+ - pip install pytest-cov
+ - pip install -e .
+ - pip install -e .[test]
+script:
+ - py.test --cov=./
+after_success:
+ - codecov

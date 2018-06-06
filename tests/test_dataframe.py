@@ -114,7 +114,6 @@ def test_copy():
 
 
 def test_native_dataframe():
-    import pandas as pd
     from eva.dataframe import DataFrame
 
     df = DataFrame(

@@ -103,6 +103,5 @@ ENV/
 # pycharm
 .idea/
 
-# RMS+, CLASSIFIED
-/eva/pms/rmsplus.py
-/tests/python/test_pms_rmsplus.py
+# pytest
+.pytest_cache/
