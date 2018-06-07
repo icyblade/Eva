@@ -18,6 +18,8 @@ setup(
         'numpy>=1.13.0',
         'pandas>=0.20.0',
         'scikit-learn>=0.18.0',
+        'requests',
+        'beautifulsoup4',
     ],
     tests_require=tests_require,
     extras_require={
