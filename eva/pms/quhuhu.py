@@ -1,4 +1,5 @@
 import datetime
+import warnings
 
 import inflection
 import pandas as pd
@@ -61,7 +62,8 @@ class QuhuhuHotel(PMS):
 
         # 综合营业数据表
         day_report = pd.DataFrame(self._parse_query_comprehensive_by_date())
-        assert len(day_report) == (self.end_dt - self.start_dt).days + 1
+        if len(day_report) != (self.end_dt - self.start_dt).days + 1:
+            warnings.warn('Missing data found, please double check the start_dt and end_dt.')
         day_report = day_report.rename(columns=inflection.underscore)
 
         year = self.start_dt.year
