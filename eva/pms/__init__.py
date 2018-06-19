@@ -8,6 +8,7 @@ from requests.cookies import RequestsCookieJar
 class LoginError(Exception):
     pass
 
+
 def need_login(func):
     """Decorator for functions which need authentication."""
 
