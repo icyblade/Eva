@@ -38,6 +38,8 @@ class QuhuhuHotel(PMS):
         self.username = self._authentication['username']
         self.password = self._authentication['password']
 
+        self.data['day_report'] = None
+
     def login(self):
         super(self.__class__, self).login()
 
@@ -62,14 +64,15 @@ class QuhuhuHotel(PMS):
 
         # 综合营业数据表
         day_report = pd.DataFrame(self._parse_query_comprehensive_by_date())
-        if len(day_report) != (self.end_dt - self.start_dt).days + 1:
-            warnings.warn('Missing data found, please double check the start_dt and end_dt.')
-        day_report = day_report.rename(columns=inflection.underscore)
+        if len(day_report):
+            if len(day_report) != (self.end_dt - self.start_dt).days + 1:
+                warnings.warn('Missing data found, please double check the start_dt and end_dt.')
+            day_report = day_report.rename(columns=inflection.underscore)
 
-        day_report['live_dt'] = pd.to_datetime(day_report['live_dt'])
-        day_report.drop('hotel_date', axis=1, inplace=True)
+            day_report['live_dt'] = pd.to_datetime(day_report['live_dt'])
+            day_report.drop('hotel_date', axis=1, inplace=True)
 
-        self.data['day_report'] = day_report
+            self.data['day_report'] = day_report
 
     @need_login
     def _parse_query_comprehensive_by_date(self):
