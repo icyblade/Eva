@@ -66,12 +66,6 @@ class QuhuhuHotel(PMS):
             warnings.warn('Missing data found, please double check the start_dt and end_dt.')
         day_report = day_report.rename(columns=inflection.underscore)
 
-        year = self.start_dt.year
-        for index, row in day_report.iterrows():
-            # TODO: it's slow
-            if row['hotel_date'] == '01-01':
-                year += 1
-            day_report.loc[index, 'live_dt'] = f'{year}-{row["hotel_date"]}'
         day_report['live_dt'] = pd.to_datetime(day_report['live_dt'])
         day_report.drop('hotel_date', axis=1, inplace=True)
 
@@ -99,6 +93,11 @@ class QuhuhuHotel(PMS):
             if json_data['code'] != '0000':
                 raise Exception(json_data['msg'])
 
+            year = start_dt.year
             for record in json_data['data']['reportList']:
                 if record['hotelDate'] != '合计':
+                    if record['hotelDate'] == '01-01':
+                        record['live_dt'] = f'{year+1}-{record["hotelDate"]}'
+                    else:
+                        record['live_dt'] = f'{year}-{record["hotelDate"]}'
                     yield record
