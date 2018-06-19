@@ -7,12 +7,13 @@ class DataFrame(object):
     @io
     def __init__(self, data=None, index=None, columns=None, dtype=None, copy=False,
                  dimensions=None, metrics=None):
+        self._dimensions = None
+        self._metrics = None
+
         self._native_dataframe = pd.DataFrame(data=data, index=index, columns=columns, dtype=dtype, copy=copy)
         self.dimensions = dimensions
         self.metrics = metrics
         self._verify_integrality()
-        self._dimensions = None
-        self._metrics = None
 
     def __len__(self):
         return len(self._native_dataframe)
