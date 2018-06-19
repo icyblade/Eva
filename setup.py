@@ -20,6 +20,7 @@ setup(
         'scikit-learn>=0.18.0',
         'requests',
         'beautifulsoup4',
+        'inflection',
     ],
     tests_require=tests_require,
     extras_require={

@@ -1,31 +1,17 @@
 import datetime
-from functools import wraps
 
-import pandas as pd
-import requests
-from bs4 import BeautifulSoup
-from requests.cookies import RequestsCookieJar
 import numpy as np
+import pandas as pd
+from bs4 import BeautifulSoup
 
-
-def need_login(func):
-    """Decorator for functions which need authentication."""
-
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if args[0].is_login:
-            return func(*args, **kwargs)
-        else:
-            raise Exception('Please login first.')
-
-    return wrapper
+from . import PMS, need_login
 
 
 def allclose(x, y, atol=1):
     return np.allclose(x, y, atol=atol)
 
 
-class Ethank(object):
+class Ethank(PMS):
     """智云 PMS 管理系统.
 
     Parameters
@@ -46,43 +32,20 @@ class Ethank(object):
     http://pms.ethank.com.cn
     """
 
-    host = 'http://pms.ethank.com.cn'
+    _host = 'http://pms.ethank.com.cn'
 
     def __init__(self, hotel_id=None, hotel_name=None, authentication=None, start_dt=None, end_dt=None):
-        self.hotel_id = hotel_id
-        self.hotel_name = hotel_name
-        self.shop_id = authentication['shop_id']
-        self.username = authentication['username']
-        self.password = authentication['password']
-        self.start_dt = datetime.date.today() - datetime.timedelta(365) if start_dt is None else start_dt
-        self.end_dt = datetime.date.today() - datetime.timedelta(1) if end_dt is None else end_dt
+        super(self.__class__, self).__init__(hotel_id, hotel_name, authentication, start_dt, end_dt)
 
-        # init session
-        self.session = requests.Session()
-        self.cookie = RequestsCookieJar()
-        self.session.cookies = self.cookie
-        self._is_login = False
-
-        # init data
-        self.data = {}
-
-    @property
-    def is_login(self):
-        """Is current PMS login.
-
-        TODO
-        --------
-         - Session expire check.
-        """
-        return self._is_login
-
-    @is_login.setter
-    def is_login(self, value):
-        self._is_login = value
+        self.shop_id = self._authentication['shop_id']
+        self.username = self._authentication['username']
+        self.password = self._authentication['password']
 
     def login(self):
+        super(self.__class__, self).login()
+
         response = self.session.post(
-            f'{self.host}/service/staff/login',
+            f'{self._host}/service/staff/login',
             data={
                 'shopID': self.shop_id,
                 'username': self.username,
@@ -97,6 +60,8 @@ class Ethank(object):
         self.is_login = True
 
     def update_data(self):
+        super(self.__class__, self).update_data()
+
         # 酒店业绩日报
         day_report = pd.DataFrame(self._parse_day_report()).set_index('live_dt')
         day_report.index = pd.to_datetime(day_report.index)
@@ -105,21 +70,13 @@ class Ethank(object):
 
         self.data['day_report'] = day_report
 
-    @property
-    def budget(self):
-        return self.data['budget']
-
-    @budget.setter
-    def budget(self, value):
-        self.data['budget'] = value
-
     @need_login
     def _parse_day_report(self):
         """爬取酒店业绩日报."""
         for delta in range((self.end_dt - self.start_dt).days + 1):
             dt = self.start_dt + datetime.timedelta(delta)
             response = self.session.post(
-                url=f'{self.host}/reportServlet?action=dayReport&aTime={dt}&bTime={dt}',
+                url=f'{self._host}/reportServlet?action=dayReport&aTime={dt}&bTime={dt}',
                 data={
                     'power_parent_id': 10000000041201,
                     'atime': dt,

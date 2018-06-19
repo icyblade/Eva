@@ -12,6 +12,4 @@ def test_frontend():
 
 def test_wechat():
     with pytest.raises(NotImplementedError):
-        from eva.frontend.wechat import Wechat
-
-        Wechat()
+        from eva.frontend.wechat import Wechat  # noqa: F401
