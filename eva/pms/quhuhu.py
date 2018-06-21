@@ -89,8 +89,6 @@ class QuhuhuHotel(PMS):
                 }
             )
 
-            start_dt = end_dt + datetime.timedelta(1)
-
             json_data = response.json()
 
             if json_data['code'] != '0000':
@@ -104,3 +102,5 @@ class QuhuhuHotel(PMS):
                     else:
                         record['live_dt'] = f'{year}-{record["hotelDate"]}'
                     yield record
+
+            start_dt = end_dt + datetime.timedelta(1)
