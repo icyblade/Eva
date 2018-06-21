@@ -79,7 +79,11 @@ class QuhuhuHotel(PMS):
         start_dt = self.start_dt
 
         while start_dt <= self.end_dt:
-            end_dt = min(start_dt + datetime.timedelta(180), self.end_dt)
+            end_dt = min(
+                start_dt + datetime.timedelta(180),
+                self.end_dt,
+                datetime.date(start_dt.year, 12, 31)
+            )
             response = self.session.post(
                 f'{self._host}/api/report/queryComprehensiveByDate.do',
                 data={
@@ -94,14 +98,15 @@ class QuhuhuHotel(PMS):
             if json_data['code'] != '0000':
                 raise Exception(json_data['msg'])
 
-            year = start_dt.year
-            for record in json_data['data']['reportList']:
-                if record['hotelDate'] != '合计':
-                    if record['hotelDate'] == '01-01':
-                        year += 1
+            if json_data['data']['reportList']:
+                year = start_dt.year
+                for record in json_data['data']['reportList']:
+                    if record['hotelDate'] != '合计':
+                        if record['hotelDate'] == '01-01':
+                            year += 1
                         record['live_dt'] = f'{year}-{record["hotelDate"]}'
-                    else:
-                        record['live_dt'] = f'{year}-{record["hotelDate"]}'
-                    yield record
+                        yield record
+            else:
+                pass
 
             start_dt = end_dt + datetime.timedelta(1)
