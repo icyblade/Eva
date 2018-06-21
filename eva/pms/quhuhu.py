@@ -98,15 +98,9 @@ class QuhuhuHotel(PMS):
             if json_data['code'] != '0000':
                 raise Exception(json_data['msg'])
 
-            if json_data['data']['reportList']:
-                year = start_dt.year
-                for record in json_data['data']['reportList']:
-                    if record['hotelDate'] != '合计':
-                        if record['hotelDate'] == '01-01':
-                            year += 1
-                        record['live_dt'] = f'{year}-{record["hotelDate"]}'
-                        yield record
-            else:
-                pass
+            for record in json_data['data']['reportList']:
+                if record['hotelDate'] != '合计':
+                    record['live_dt'] = f'{start_dt.year}-{record["hotelDate"]}'
+                    yield record
 
             start_dt = end_dt + datetime.timedelta(1)
