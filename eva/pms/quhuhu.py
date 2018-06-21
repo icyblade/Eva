@@ -28,8 +28,8 @@ class QuhuhuHotel(PMS):
     http://gj.quhuhu.com/
     """
 
-    _host = 'https://gj.quhuhu.com'
-    _login_host = 'http://i.quhuhu.com'
+    _host = 'https://jd.izhonghui.cn'
+    _login_host = 'http://wo.izhonghui.cn'
 
     def __init__(self, hotel_id=None, hotel_name=None, authentication=None, start_dt=None, end_dt=None):
         super(self.__class__, self).__init__(hotel_id, hotel_name, authentication, start_dt, end_dt)
